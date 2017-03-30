@@ -2,11 +2,13 @@ var express = require('express');
 var pug = require('pug');
 var app = express();
 var body = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 app.use(express.static('public'));
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use( body.urlencoded({extended: false}) );
+app.use(cookieParser());
 
 
 app.use('*', function(req, res, next){
@@ -49,7 +51,22 @@ app.post('/postform', function(req, res){
     var output = title + ': ' + context;
 
     res.render('postResult', {title:"Result", result:output });
-
 });
+
+
+app.get('/cookie', function(req, res){
+    var count;
+
+    if(req.cookies.count){
+        count = parseInt(req.cookies.count) + 1;
+    }
+    else{
+        count = 0;
+    }
+
+    res.cookie('count', count);
+    res.send(count.toString());
+});
+
 
 app.listen(3000);
