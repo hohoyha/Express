@@ -32,7 +32,7 @@ Express-POST 방식 GET
         전달
            input type ='submit
     node.js
-        var body = require(body-parser);
+        var body = require('body-parser');
         app.use( body.urlencoded({extended: false}) );
         app.post('/topic', function(req, res) { 
             var title =  req.body.title;
