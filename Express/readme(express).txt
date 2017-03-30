@@ -22,7 +22,7 @@ URL을 이용한 정보의 전달
 
      app.get('/topic/:id/:mode', function(req, res) {
         res.send(req.params.id+','+req.params.mode);
-     }
+     });
 
 Express-POST 방식 GET
     HTML

@@ -24,8 +24,15 @@ app.get('/staticTest', function(req, res){
 });
 
 app.get('/sample', function(req, res){
-  res.render('sample', { title:'SamplePag', message:'테스트중입니다.' });
+  res.render('sample', { title:'SamplePage', message:'테스트중입니다.' });
 });
 
+ app.get('/topic/:id/:mode', function(req, res) {
+        res.send(req.params.id+','+req.params.mode);
+     });
+
+ app.get('/form', function(req, res){
+    res.render('form',{ title:'FormPage'});
+});
 
 app.listen(3000);
