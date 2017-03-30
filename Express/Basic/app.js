@@ -8,7 +8,7 @@ app.use(express.static('public'));
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use( body.urlencoded({extended: false}) );
-app.use(cookieParser());
+app.use(cookieParser('ojojafjoasfd')); //add secret key 
 
 
 app.use('*', function(req, res, next){
@@ -65,6 +65,21 @@ app.get('/cookie', function(req, res){
     }
 
     res.cookie('count', count);
+    res.send(count.toString());
+});
+
+
+app.get('/signedcookie', function(req, res){
+    var count;
+
+    if(req.signedCookies.count2){
+        count = parseInt(req.signedCookies.count2) + 1;
+    }
+    else{
+        count = 0;
+    }
+
+    res.cookie('count2', count, {signed:true});
     res.send(count.toString());
 });
 
