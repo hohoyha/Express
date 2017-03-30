@@ -3,12 +3,18 @@ var pug = require('pug');
 var app = express();
 var body = require('body-parser');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 app.use(express.static('public'));
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use( body.urlencoded({extended: false}) );
 app.use(cookieParser('ojojafjoasfd')); //add secret key 
+
+app.use( session(
+  { secret:'keyboad cat', 
+    resave: false, 
+    saveUninitialized: true }) );
 
 
 app.use('*', function(req, res, next){
@@ -61,7 +67,7 @@ app.get('/cookie', function(req, res){
         count = parseInt(req.cookies.count) + 1;
     }
     else{
-        count = 0;
+        count = 1 ;
     }
 
     res.cookie('count', count);
@@ -81,6 +87,19 @@ app.get('/signedcookie', function(req, res){
 
     res.cookie('count2', count, {signed:true});
     res.send(count.toString());
+});
+
+app.get('/session', function(req, res){
+   var value = req.session.count;
+   console.log(value);
+   
+   if( req.session.count !== undefined){
+      req.session.count++;
+   }else  {
+      req.session.count = 0;
+   }
+
+    res.send('count: ' + req.session.count);
 });
 
 
