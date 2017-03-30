@@ -1,5 +1,10 @@
 var express = require('express');
+var pug = require('pug');
 var app = express();
+
+app.use(express.static('public'));
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 app.get('/hello', function(req, res){
    res.send('hello world');
@@ -18,6 +23,9 @@ app.get('/staticTest', function(req, res){
   res.send(output);
 });
 
-app.use(express.static('public'));
+app.get('/sample', function(req, res){
+  res.render('sample', { title:'SamplePag', message:'테스트중입니다.' });
+});
+
 
 app.listen(3000);

@@ -11,9 +11,9 @@ Express 사용하기
     <html>'   </html>`;
 
 템플릿 엔진
-    app.set('view engine', 'jade');
+    app.set('view engine', 'pug');  'jade' --> pug 바뀜
     app.set('views', './views');
-  표시 ( app.get('/template', function(req, res){ } )
+    표시 ( app.get('/template', function(req, res){ } )
     res.render('temp', {time:Date(), title:'Jade'});
 
 URL을 이용한 정보의 전달
