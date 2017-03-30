@@ -35,4 +35,8 @@ app.get('/sample', function(req, res){
     res.render('form',{ title:'FormPage'});
 });
 
+app.post('/postform', function(req, re){
+    res.send('Post');
+});
+
 app.listen(3000);
