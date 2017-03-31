@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ping Pong</title>
+       <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script src="/js/jquery-3.1.1.min.js"></script>       
+    </head>
+    <body>
+        <div id="message"></div>
+        <ul id="info"></ul>
+
+        <script>
+             $('#message').text = "hoho";
+            var socket = io.connect('http://localhost:3000/game');
+            var $info = $('#info');
+
+            
+            function addLi(message){
+                $info.append('<li>' + message + '</li>');
+            };
+            
+            socket.on('message', function(data){
+                console.log(data);
+                //$('#message').text = data.message;
+                addLi(data.message);
+            });
+
+          
+
+        </script>
+    </body>
+
+
+
+</html>
