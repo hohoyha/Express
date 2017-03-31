@@ -4,6 +4,7 @@ var app = express();
 var body = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
 app.use(express.static('public'));
 app.set('view engine', 'pug');
@@ -14,7 +15,9 @@ app.use(cookieParser('ojojafjoasfd')); //add secret key
 app.use( session(
   { secret:'keyboad cat', 
     resave: false, 
-    saveUninitialized: true }) );
+    saveUninitialized: true,
+    store : new FileStore(),
+   }) );
 
 
 app.use('*', function(req, res, next){
