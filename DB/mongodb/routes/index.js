@@ -1,5 +1,6 @@
 // routes/index.js
- 
+var Book    = require('../models/book');
+
 module.exports = function(app)
 {
     // GET ALL BOOKS
