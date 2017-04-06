@@ -64,5 +64,36 @@ passport.use(new Strategy(
         res.redirect(path);
   });
 
+  route.get('/register', 
+    function(req, res){
+        res.render('register');
+  });
+
+  route.post('/register', function(req, res, next) {
+       
+        var  user;
+        db.users.findByUsername(req.body.username, function(err, user){
+            if(!user)
+            {
+                user = { id:0, 
+                        username: req.body.username, 
+                        password: req.body.password,
+                        displayName: req.body.displayname };
+               
+                db.users.addUser(user);
+
+                req.login(user, function(err){
+                    req.session.save(function(){
+                        res.redirect(path);
+                    });
+                });      
+            }
+            else {
+               return next(err);
+            }
+        });
+  });
+
+
    return route;
 };

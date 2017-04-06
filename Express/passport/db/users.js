@@ -15,8 +15,23 @@ exports.findById = function(id, cb) {
   });
 }
 
-exports.addUser = function( cb) {
+exports.addUser = function(cb) {
+  
+    if(cb.id === 0){
+       cb.id = records.length + 1;
+    }
+
     records.push(cb);
+}
+
+exports.findOrCreate = function(cb){
+    var find;
+    exports.findById(cb.id, function(err, find){
+        if(err) return console.log("findOrCreate");
+        
+        if(!find)
+          records.push(cb);
+    });  
 }
 
 exports.findByUsername = function(username, cb) {

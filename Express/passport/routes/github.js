@@ -17,7 +17,7 @@ module.exports = function(passport, db, path){
             user.id = profile.id;
             user.displayName = profile.displayName;
             user.username = profile.username;
-            db.users.addUser(user);
+            db.users.findOrCreate(user);
             return done(null, user);
         }
     ));
