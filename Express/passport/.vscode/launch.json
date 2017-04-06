@@ -8,16 +8,14 @@
             "type": "node",
             "request": "launch",
             "name": "프로그램 시작",
-            "program": "${file}",
-            "outFiles": []
+            "program": "${file}"
         },
         {
             "type": "node",
             "request": "attach",
-            "name": "프로세스에 연결",
+            "name": "포트에 연결",
             "address": "localhost",
-            "port": 5858,
-            "outFiles": []
+            "port": 5858
         }
     ]
 }
