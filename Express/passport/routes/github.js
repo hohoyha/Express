@@ -3,7 +3,18 @@ var route =   express.Router();
 var GithubStrategy = require('passport-github').Strategy;
 var git = 'git:';
 
+
+
+
 module.exports = function(passport, db, path, Account){
+
+    var updateUserdata = function(profile) {
+        var user = {};
+        user.uid = 0;
+        user.displayName = profile.displayName;
+        user.username = git + profile.username;
+        return user;
+    }
 
     passport.use(new GithubStrategy({
         clientID: "8e83092bf108dec08741",
@@ -22,26 +33,19 @@ module.exports = function(passport, db, path, Account){
                 account.displayName = profile.displayName;
               
                   account.save(function(err){
-                    if(err){
-                        console.error(err);
-                        res.json({result: 0});
-                        return;
-                    }
-            
-                    var user = {};
-                    user.uid = 0;
-                    user.displayName = profile.displayName;
-                    user.username = git + profile.username;
-                    db.users.findOrCreate(user, function(err, data ){
-                        return done(null, data);
-                    });
-                });
-             
+                        if(err){
+                            console.error(err);
+                            res.json({result: 0});
+                            return;
+                        }
+
+                        user = updateUserdata(profile);
+                        db.users.findOrCreate(user, function(err, data ){
+                            return done(null, data);
+                        });
+                 });
             } else {
-                var user = {};
-                user.uid = 0;
-                user.displayName = profile.displayName;
-                user.username = git + profile.username;
+                user = updateUserdata(profile);
                 db.users.findOrCreate(user, function(err, data ){
                     return done(null, data);
                 });

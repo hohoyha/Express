@@ -2,8 +2,19 @@ var express = require("express");
 var route =   express.Router();
 var Strategy = require('passport-local').Strategy;
 
+
+
 module.exports = function(passport, db, path, Account){
  
+
+var updateUserdata = function(account) {
+    var user = {};
+    user.uid = 0;
+    user.displayName = account.displayName;
+    user.username = account.username;
+    user.password = account.password;
+    return user;
+} 
 // Configure the local strategy for use by Passport.
 //
 passport.use(new Strategy(
@@ -13,14 +24,10 @@ passport.use(new Strategy(
         if (!accounts[0]) { return cb(null, false); }
         if (accounts[0].password != password) { return cb(null, false); }
 
-           var user = {};
-            user.uid = 0;
-            user.password = password;
-            user.displayName = accounts[0].displayName;
-            user.username = accounts[0].username;
-            db.users.findOrCreate(user, function(err, data ){
-                return cb(null, data);
-            });   
+        var user = updateUserdata(accounts[0]);
+        db.users.findOrCreate(user, function(err, data ){
+            return cb(null, data);
+        });   
 
          // db.users.addUser(accounts[0]);
          //return cb(null, accounts[0]);
@@ -88,7 +95,7 @@ passport.use(new Strategy(
                 var account = new Account();
                 account.username = req.body.username;
                 account.password = req.body.password;
-                account.displayName = req.body.displayname;
+                account.displayName = req.body.displayName;
               
                 account.save(function(err){
                     if(err){
@@ -97,19 +104,17 @@ passport.use(new Strategy(
                         return;
                     }
 
-                    user = { uid : 0,
-                        username: req.body.username, 
-                        password: req.body.password,
-                        displayName: req.body.displayname };
-                    
-                    db.users.addUser(user);
+                var user = updateUserdata(account);
+                db.users.findOrCreate(user, function(err, data ){
+                    // return cb(null, data);
+                    req.login(data, function(err){
+                    req.session.save(function(){
+                            res.redirect(path);  
+                        });
+                    });      
+                });   
                    
-                  req.login(user, function(err){
-                        req.session.save(function(){
-                                res.redirect(path);  
-                            });
-                        });      
-                   });
+                });
             }
             else
             {
