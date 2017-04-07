@@ -1,8 +1,9 @@
 var express = require("express");
 var route =   express.Router();
 var GithubStrategy = require('passport-github').Strategy;
+var git = 'git:';
 
-module.exports = function(passport, db, path){
+module.exports = function(passport, db, path, Account){
 
     passport.use(new GithubStrategy({
         clientID: "8e83092bf108dec08741",
@@ -12,13 +13,43 @@ module.exports = function(passport, db, path){
         function(accessToken, refreshToken, profile, done) {
             // placeholder for translating profile into your own custom user object.
             // for now we will just use the profile object returned by GitHub
+         Account.find({username: git + profile.username }, function(err, accounts ){
+            if(!accounts[0]) 
+            {
+                user = { 
+                        uid : 0,
+                        username: profile.username, 
+                        password: '',
+                        displayName: profile.displayName };
+               
+                db.users.addUser(user);
+
+                var account = new Account();
+                account.username = git + profile.username;
+                account.password = '',
+                account.displayName = profile.displayName;
+              
+                  account.save(function(err){
+                    if(err){
+                        console.error(err);
+                        res.json({result: 0});
+                        return;
+                    }
             
-            var user = {};
-            user.id = profile.id;
-            user.displayName = profile.displayName;
-            user.username = profile.username;
-            db.users.findOrCreate(user);
-            return done(null, user);
+                   return done(null, user);
+                });
+             
+            } else {
+                var user = {};
+                user.id = 0;
+                user.displayName = profile.displayName;
+                user.username = git + profile.username;
+                db.users.findOrCreate(user, function(err, data ){
+                    return done(null, data);
+                });
+            } 
+        
+            });
         }
     ));
 

@@ -3,7 +3,7 @@ var passport = require('passport');
 module.exports = function(app, db) {
     // deserializing.
     passport.serializeUser(function(user, cb) {
-        cb(null, user.id);
+        cb(null, user.uid);
     });
 
     passport.deserializeUser(function(id, cb) {

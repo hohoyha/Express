@@ -17,14 +17,17 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
+
+var mongo = require('./config/mgconfig')();
+var Account = require('./db/account')(mongo);
+
 var passport = require('./config/passportConfig')(app, db);
 
 var path = '/auth';
-var local = require('./routes/local')(passport, db, path);
+var local = require('./routes/local')(passport, db, path, Account);
 app.use(path, local);
 
-var github = require('./routes/github')(passport, db, path);
+var github = require('./routes/github')(passport, db, path, Account);
 app.use('/auth/github', github);
-
 
 app.listen(30000);

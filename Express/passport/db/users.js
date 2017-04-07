@@ -1,13 +1,13 @@
 var records = [
-    { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
-  , { id: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
+    { uid: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
+  , { uid: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
 ];
 
-exports.findById = function(id, cb) {
+exports.findById = function(uid, cb) {
   process.nextTick(function() {
      for (var i = 0, len = records.length; i < len; i++) {
       var record = records[i];
-      if (record.id === id) {
+      if (record.uid === uid ) {
         return cb(null, record);
       }
     }
@@ -17,20 +17,23 @@ exports.findById = function(id, cb) {
 
 exports.addUser = function(cb) {
   
-    if(cb.id === 0){
-       cb.id = records.length + 1;
+    if(cb.uid === 0){
+       cb.uid = records.length + 1;
     }
 
     records.push(cb);
 }
 
-exports.findOrCreate = function(cb){
-    var find;
-    exports.findById(cb.id, function(err, find){
+exports.findOrCreate = function( user, cb){
+
+    exports.findByUsername(user.username, function(err, find){
         if(err) return console.log("findOrCreate");
         
-        if(!find)
-          records.push(cb);
+        if(!find){
+           exports.addUser(user);
+        }   
+
+        return cb(null, user);
     });  
 }
 

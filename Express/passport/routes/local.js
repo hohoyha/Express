@@ -2,17 +2,20 @@ var express = require("express");
 var route =   express.Router();
 var Strategy = require('passport-local').Strategy;
 
-module.exports = function(passport, db, path){
+module.exports = function(passport, db, path, Account){
  
 // Configure the local strategy for use by Passport.
 //
 passport.use(new Strategy(
   function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
+    Account.find({username: username }, function(err, accounts ){
+        if(err) { return cb(err); }
+        if (!accounts[0]) { return cb(null, false); }
+        if (accounts[0].password != password) { return cb(null, false); }
+
+         db.users.addUser(accounts[0]);
+
+         return cb(null, accounts[0]);
     });
   }));
 
@@ -71,25 +74,39 @@ passport.use(new Strategy(
 
   route.post('/register', function(req, res, next) {
        
-        var  user;
-        db.users.findByUsername(req.body.username, function(err, user){
-            if(!user)
+        Account.find({username: req.body.username }, function(err, accounts ){
+            if(!accounts[0]) 
             {
-                user = { id:0, 
+                var account = new Account();
+                account.username = req.body.username;
+                account.password = req.body.password;
+                account.displayName = req.body.displayname;
+              
+                account.save(function(err){
+                    if(err){
+                        console.error(err);
+                        res.json({result: 0});
+                        return;
+                    }
+
+
+                
+                   user = { uid : 0,
                         username: req.body.username, 
                         password: req.body.password,
                         displayName: req.body.displayname };
-               
-                db.users.addUser(user);
-
-                req.login(user, function(err){
+                     db.users.addUser(user);
+                   
+                    req.login(user, function(err){
                     req.session.save(function(){
-                        res.redirect(path);
-                    });
-                });      
+                        res.redirect(path);  
+                        });
+                    });      
+                });
             }
-            else {
-               return next(err);
+            else
+            {
+                res.redirect(path + '/register');
             }
         });
   });
