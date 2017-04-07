@@ -17,7 +17,7 @@ exports.findById = function(uid, cb) {
 
 exports.addUser = function(cb) {
   
-    if(cb.uid === 0){
+    if( cb.uid === 0 ){
        cb.uid = records.length + 1;
     }
 
@@ -31,7 +31,9 @@ exports.findOrCreate = function( user, cb){
         
         if(!find){
            exports.addUser(user);
-        }   
+        }else {
+          user = find;
+        }
 
         return cb(null, user);
     });  

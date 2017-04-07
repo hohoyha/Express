@@ -13,9 +13,17 @@ passport.use(new Strategy(
         if (!accounts[0]) { return cb(null, false); }
         if (accounts[0].password != password) { return cb(null, false); }
 
-         db.users.addUser(accounts[0]);
+           var user = {};
+            user.uid = 0;
+            user.password = password;
+            user.displayName = accounts[0].displayName;
+            user.username = accounts[0].username;
+            db.users.findOrCreate(user, function(err, data ){
+                return cb(null, data);
+            });   
 
-         return cb(null, accounts[0]);
+         // db.users.addUser(accounts[0]);
+         //return cb(null, accounts[0]);
     });
   }));
 
@@ -89,20 +97,19 @@ passport.use(new Strategy(
                         return;
                     }
 
-
-                
-                   user = { uid : 0,
+                    user = { uid : 0,
                         username: req.body.username, 
                         password: req.body.password,
                         displayName: req.body.displayname };
-                     db.users.addUser(user);
+                    
+                    db.users.addUser(user);
                    
-                    req.login(user, function(err){
-                    req.session.save(function(){
-                        res.redirect(path);  
-                        });
-                    });      
-                });
+                  req.login(user, function(err){
+                        req.session.save(function(){
+                                res.redirect(path);  
+                            });
+                        });      
+                   });
             }
             else
             {

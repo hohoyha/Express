@@ -16,14 +16,6 @@ module.exports = function(passport, db, path, Account){
          Account.find({username: git + profile.username }, function(err, accounts ){
             if(!accounts[0]) 
             {
-                user = { 
-                        uid : 0,
-                        username: profile.username, 
-                        password: '',
-                        displayName: profile.displayName };
-               
-                db.users.addUser(user);
-
                 var account = new Account();
                 account.username = git + profile.username;
                 account.password = '',
@@ -36,12 +28,18 @@ module.exports = function(passport, db, path, Account){
                         return;
                     }
             
-                   return done(null, user);
+                    var user = {};
+                    user.uid = 0;
+                    user.displayName = profile.displayName;
+                    user.username = git + profile.username;
+                    db.users.findOrCreate(user, function(err, data ){
+                        return done(null, data);
+                    });
                 });
              
             } else {
                 var user = {};
-                user.id = 0;
+                user.uid = 0;
                 user.displayName = profile.displayName;
                 user.username = git + profile.username;
                 db.users.findOrCreate(user, function(err, data ){
