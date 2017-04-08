@@ -42,7 +42,7 @@ passport.use(new Strategy(
         // Define routes.
   route.get('/',
     function(req, res) {
-        res.render('home', { user: req.user });
+        res.render('index', { user: req.user });
 
         if(req.isAuthenticated() ) {
             console.log("login succeed.");
