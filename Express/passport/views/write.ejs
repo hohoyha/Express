@@ -1,0 +1,16 @@
+
+   <% include ./partials/login %>
+<form action="/api/message/write" method="post">
+	<div>
+	<label>Title:</label>
+	<input type="text" name="title" /><br/>
+	</div>
+	<div>
+    </br>
+	<label>Content:</label>
+	<textarea name="content" id="" cols="30" rows="10"></textarea>
+	</div>
+	<div>
+	<input type="submit" value="Submit"/>
+	</div>
+</form>

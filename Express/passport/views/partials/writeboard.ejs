@@ -1,0 +1,51 @@
+   <% if (messages) { %>
+                <script>
+                   $
+                 
+                </script>
+
+                <table class="table">
+                 <thead>
+                    <tr>
+                    <th>Title</th> <th>Content</th> <th>Author</th>
+                    <th>Edit</th><th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% for (var i = 0; i < messages.length; i++) { %>
+                    <tr>
+                    <td> <%= messages[i].title %></td>
+                    <td> <%= messages[i].content %></td>
+                    <td><%= messages[i].author %> </td>
+
+                    <% if (user) { %>
+                        <% if (  messages[i].author ===  user.username )  { %>
+                            <td>
+                            <button onclick="location.href = '/api/message/edit/<%= messages[i].id %>' "> 
+                                edit </button>
+                            </td>
+                            <td>
+
+                    
+                            <form action = "/api/message/delete/<%= messages[i].id %>" method="Post">
+                            <input type="submit" value="delete" />
+                            </form>
+                        
+                            </td>
+                        <% } %>
+                    <% } %>
+                    </tr>
+                <% } %>
+                </table>
+                </table>
+               
+                <form action = "/api/message/find/" method="Post">
+                    <input type="text" name = "content" > 
+                    <input type="submit" value="검색" />
+                </form>
+            <% } else { %> 
+            <% } %>
+
+  <% if (user) { %>
+  <a href="/api/message/write">쓰기</a>
+  <% } %>

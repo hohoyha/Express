@@ -31,4 +31,9 @@ app.use(path, local);
 var github = require('./routes/github')(passport, db, path, Account);
 app.use('/auth/github', github);
 
+
+var Message = require('./db/message')(mongo);
+var mboard = require('./routes/messageboard')(Message);
+app.use('/api/message', mboard );
+
 app.listen(30000);

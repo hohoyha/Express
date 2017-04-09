@@ -3,10 +3,20 @@
     <% include ./partials/head %>
   </head>
   <body>
- 
+    <div class="row">
+      <div class="col-md-12">
+         <% include ./partials/login %>
+      </div>
+    </div>
 
-    <% include ./partials/login %>
-    <% include ./partials/nav %>
+    <div class="row">
+        <div class="col-md-4">
+             <% include ./partials/nav %>
+        </div>
+        <div class="col-md-8">
+             <% include ./partials/writeboard %>
+        </div>  
+    </div>
 
     <% include ./partials/footer %>
    

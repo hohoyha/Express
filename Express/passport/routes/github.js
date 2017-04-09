@@ -3,9 +3,6 @@ var route =   express.Router();
 var GithubStrategy = require('passport-github').Strategy;
 var git = 'git:';
 
-
-
-
 module.exports = function(passport, db, path, Account){
 
     var updateUserdata = function(profile) {
